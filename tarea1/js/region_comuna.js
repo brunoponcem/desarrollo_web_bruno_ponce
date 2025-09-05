@@ -66,3 +66,42 @@ let region_comuna = {
         }
     ]
 };
+
+
+function poblarRegiones() {
+  const regionSelect = document.getElementById("region");
+  if (!regionSelect || typeof region_comuna === "undefined") return;
+
+  regionSelect.innerHTML = '<option value="">Seleccione una región</option>';
+
+  region_comuna.regiones.forEach(r => {
+    const opt = document.createElement("option");
+    opt.value = r.numero;   
+    opt.textContent = r.nombre;
+    regionSelect.appendChild(opt);
+  });
+}
+
+function updateComunas() {
+  const regionSelect = document.getElementById("region");
+  const comunaSelect = document.getElementById("comuna");
+  if (!regionSelect || !comunaSelect || typeof region_comuna === "undefined") return;
+
+
+  comunaSelect.innerHTML = '<option value="">Seleccione una comuna</option>';
+
+  const reg = region_comuna.regiones.find(r => String(r.numero) === String(regionSelect.value));
+  if (!reg) return;
+
+  reg.comunas.forEach(c => {
+    const opt = document.createElement("option");
+    opt.value = c.id;         
+    opt.textContent = c.nombre;
+    comunaSelect.appendChild(opt);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  poblarRegiones();
+  document.getElementById("region")?.addEventListener("change", updateComunas);
+});

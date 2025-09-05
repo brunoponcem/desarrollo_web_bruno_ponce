@@ -6,8 +6,44 @@
     <title>Agregar aviso</title>
 </head>
 <body>
-    <h1>Agregar aviso</h1>
     <a href="index.html">Volver</a>
+    <h1>Agregar aviso</h1>
     
+    <div class="main-container">
+        <div id="val-box" hidden>
+            <h2 id="val-msg"></h2>
+            <ul id="val-list"></ul>
+        </div>
+        <form name="myForm" method="post" enctype="multipart/form-data">
+            <label for="nombre">Nombre</label>
+            <input type="nombre" name="nombre" id="nombre" minlength="15" maxlength="80"><br>
+
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" minlength="15" required><br>
+
+            <label for="phone">Phone</label>
+            <input type="text" name="phone" id="phone" minlength="8" required><br>
+            
+            <label for="files">Pictures</label>
+            <input type="file" name="files" id="files" multiple accept="image/*,.pdf" required><br>
+
+            <label for="region">Región</label>
+            <select name="region" id="region" required>
+                <option value="">Seleccione una región</option>
+            </select><br>
+
+            <label for="comuna">Comuna</label>
+            <select name="comuna" id="comuna" required>
+                <option value="">Seleccione una comuna</option>
+            </select><br>
+
+            <label for="reason" style="display: none;">Argumentos</label>
+            <textarea name="comments" id="comments" rows="4" cols="50" style="display: none;"></textarea><br>
+            
+            <button id="submit-btn" type="button">Enviar</button>
+        </form>
+    </div>
+    <script src="./js/region_comuna.js"></script>
+    <script src="./js/validation.js"></script>
 </body>
 </html>

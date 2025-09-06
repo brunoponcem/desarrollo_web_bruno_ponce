@@ -4,10 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listado</title>
+    <style>
+        table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:.5rem;text-align:left}
+        .acciones a{margin-right:.5rem}
+        .thumbs img{width:320px;height:240px;object-fit:cover;cursor:pointer}
+        .oculto{display:none}
+  </style>
 </head>
 <body>
-    <h1>Listado</h1>
-    <a href="index.html">Volver</a>
     
+    <a href="index.html">Volver</a>
+    <h1>Listado</h1>
+
+  <main>
+    <table id="tabla">
+      <thead>
+        <tr>
+          <th>Fecha Publicación</th>
+          <th>Fecha Entrega</th>
+          <th>Comuna</th>
+          <th>Sector</th>
+          <th>Cantidad</th>
+          <th>Tipo/edad</th>
+          <th>Nombre Contacto</th>
+          <th>Total fotos</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <section id="detalle" class="oculto"></section>
+  </main>
+
+  <dialog id="visor">
+    <img id="visor-img" alt="foto grande" width="800" height="600">
+    <div class="acciones" style="margin-top:.75rem">
+      <a href="#" id="visor-cerrar">Cerrar</a>
+    </div>
+  </dialog>
+
+  <script>
+    const DATA = [
+      { id:1, fechaPublicacion:"2025-08-18 12:00", fechaEntrega:"2025-08-20 12:00", region:"Metropolitana", comuna:"Santiago", sector:"Beauchef 850, terraza", cantidad:1, tipo:"gato", edad:2, unidadEdad:"meses", nombre:"Camila Soto", totalFotos:2, fotos:["assets/foto1-320.jpg","assets/foto1b-320.jpg"], fotosXL:["assets/foto1-800.jpg","assets/foto1b-800.jpg"] },
+      { id:2, fechaPublicacion:"2025-08-17 19:00", fechaEntrega:"2025-08-21 11:00", region:"Metropolitana", comuna:"Ñuñoa", sector:"Plaza", cantidad:3, tipo:"perros", edad:2, unidadEdad:"meses", nombre:"Felipe Rojas", totalFotos:1, fotos:["assets/foto2-320.jpg"], fotosXL:["assets/foto2-800.jpg"] },
+      { id:3, fechaPublicacion:"2025-08-16 10:30", fechaEntrega:"2025-08-22 09:00", region:"Valparaíso", comuna:"Viña del Mar", sector:"Reñaca", cantidad:2, tipo:"gatos", edad:1, unidadEdad:"meses", nombre:"Ignacia Pérez", totalFotos:2, fotos:["assets/foto3-320.jpg","assets/foto3b-320.jpg"], fotosXL:["assets/foto3-800.jpg","assets/foto3b-800.jpg"] },
+      { id:4, fechaPublicacion:"2025-08-15 18:45", fechaEntrega:"2025-08-20 18:00", region:"Biobío", comuna:"Concepción", sector:"Centro", cantidad:1, tipo:"perro", edad:1, unidadEdad:"años", nombre:"Tomás Silva", totalFotos:1, fotos:["assets/foto4-320.jpg"], fotosXL:["assets/foto4-800.jpg"] },
+      { id:5, fechaPublicacion:"2025-08-14 08:15", fechaEntrega:"2025-08-19 12:30", region:"Coquimbo", comuna:"La Serena", sector:"Cerro Grande", cantidad:2, tipo:"perros", edad:6, unidadEdad:"meses", nombre:"María López", totalFotos:2, fotos:["assets/foto5-320.jpg","assets/foto5b-320.jpg"], fotosXL:["assets/foto5-800.jpg","assets/foto5b-800.jpg"] }
+    ];
+
+    const tbody = document.querySelector("#tabla tbody");
+    const detalle = document.getElementById("detalle");
+    const visor = document.getElementById("visor");
+    const visorImg = document.getElementById("visor-img");
+    const visorCerrar = document.getElementById("visor-cerrar");
+
+    DATA.forEach(row=>{
+      const tr=document.createElement("tr");
+      tr.dataset.id=row.id;
+      tr.innerHTML=`
+        <td>${row.fechaPublicacion}</td>
+        <td>${row.fechaEntrega}</td>
+        <td>${row.comuna}</td>
+        <td>${row.sector}</td>
+        <td>${row.cantidad}</td>
+        <td>${row.tipo} / ${row.edad} ${row.unidadEdad}</td>
+        <td>${row.nombre}</td>
+        <td>${row.totalFotos}</td>`;
+      tr.addEventListener("click",()=>verDetalle(row.id));
+      tbody.appendChild(tr);
+    });
+
+    function verDetalle(id){
+      const x=DATA.find(d=>d.id===id);
+      const thumbs=x.fotos.map((src,i)=>`<img src="${src}" width="320" height="240" alt="foto" data-xl="${x.fotosXL[i]}">`).join("");
+      detalle.innerHTML=`
+        <h2>Detalle del aviso</h2>
+        <p><strong>Fecha publicación:</strong> ${x.fechaPublicacion}</p>
+        <p><strong>Fecha entrega:</strong> ${x.fechaEntrega}</p>
+        <p><strong>Región:</strong> ${x.region}</p>
+        <p><strong>Comuna:</strong> ${x.comuna}</p>
+        <p><strong>Sector:</strong> ${x.sector}</p>
+        <p><strong>Cantidad:</strong> ${x.cantidad}</p>
+        <p><strong>Tipo:</strong> ${x.tipo}</p>
+        <p><strong>Edad:</strong> ${x.edad} ${x.unidadEdad}</p>
+        <p><strong>Contacto:</strong> ${x.nombre}</p>
+        <div class="thumbs">${thumbs}</div>
+        <div class="acciones" style="margin-top:.75rem">
+          <a href="listado.html">Volver al listado</a>
+          <a href="index.html">Volver a la portada</a>
+        </div>`;
+      detalle.classList.remove("oculto");
+      detalle.querySelectorAll(".thumbs img").forEach(img=>{
+        img.addEventListener("click",e=>{
+          visorImg.src=e.target.getAttribute("data-xl");
+          visor.showModal();
+        });
+      });
+    }
+
+    visorCerrar.addEventListener("click",e=>{e.preventDefault();visor.close()});
+  </script>
 </body>
 </html>
